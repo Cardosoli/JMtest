@@ -2,25 +2,45 @@ import React, { Component } from 'react'
 import user from '../Img/User.png'
 import cnpjService from '../cnpjService/cnpjService'
 import Icon from '../Icon/icon'
-
-const cnpjValidate = '112.345.678/0001-23'
+import Input from '../Components/form/form'
+import {Button} from 'reactstrap'
 
 export class ValidateCNPJ extends Component {
 
     state = {
-        valid: false
+        valid: null,
+        cnpj: null,
+    }
+   
+    handleChange = (e) => {
+        let value = e.target.value;
+
+        String.prototype.replaceAll = function(target, replacement) {
+            return this.split(target).join(replacement);
+        }
+
+        const newValue = value.replaceAll('.', '').replaceAll('/', '').replaceAll('-', '')
+
+        this.setState ({
+            cnpj: newValue
+        })
     }
 
     CNPJsearch = async() => {
-        const validate = await cnpjService.validateCNPJ(encodeURIComponent(cnpjValidate))
-        if(validate.status === 200){
-           this.setState ({
-                valid: true
-           })
+        try {
+            const validate = await cnpjService.validateCNPJ(encodeURIComponent(this.state.cnpj));
+            this.setState({
+                valid: validate.valid
+            })
+            console.log("CNPJ válido")
+        } 
+        catch (e) {
+            this.setState({
+                valid: false
+            })
+            console.log("CNPJ inválido")
         }
     }
-
-
 
     render() {
 
@@ -29,18 +49,18 @@ export class ValidateCNPJ extends Component {
         return (
             <div>
                 <div className="validate_cnpj" >
-                        <div className="header_nova_cotacao">
-                            <div className="icon_nova_cotacao">
-                                <Icon tag="line-chart" size='lg'/>
-                            </div>
-                            <div className="cotacao">
-                                <span>Nova cotação</span>
-                                <span>#0980</span>
-                            </div>
-                            <div className="user">
-                                <img src={user} width='30' height='30'/>
-                            </div>
+                    <div className="header_nova_cotacao">
+                        <div className="icon_nova_cotacao">
+                            <Icon tag="line-chart" size='lg'/>
                         </div>
+                        <div className="cotacao">
+                            <span>Nova cotação</span>
+                            <span>#0980</span>
+                        </div>
+                        <div className="user">
+                            <img src={user} width='30' height='30'/>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="body_busca_cnpj">
@@ -58,28 +78,41 @@ export class ValidateCNPJ extends Component {
                             CNPJ / Empresa
                         </div>
                         <div className="description">
-                            <span className="cod_cnpj">
-                                12.345.678/0001-23
-                            </span>
-                            <span className={!state.valid ? "icon_cnpj" : "icon_cnpj_green"}>
-                                <Icon tag="icon-check-circle" size='sm'/>
-                            </span>
+
+                            <Input
+                                name='CodCnpj'
+                                id='CodCnpj'
+                                type="text"
+                                placeholder="Digite o CNPJ"
+                                mask={[/\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/,]}
+                                onChange={(e) => this.handleChange(e)}
+                            />
+                            {state.valid !== null &&
+                                <span className={!state.valid ? "icon_cnpj_invalid" : "icon_cnpj_valid"}>
+                                    <Icon tag="icon-check-circle" size='sm'/>
+                                </span>
+                            }
                         </div>
                     </div>
 
                     <div className="button_confirm">
                         <div className="button_container" />
-                        <div className="button_footer" onClick={this.CNPJsearch} color='white' background='rgb(50, 204, 204)'>
-                            <span className='ok'>
-                                OK
-                            </span>
-                            <span className='icon'>
-                                <Icon tag="icon-arrow-right" size='1x'/>
-                            </span>
-                        </div>
+                            <Button 
+                                className={this.state.cnpj==null ? "button_footer" : "button_footer_blue"}
+                                onClick={this.CNPJsearch} 
+                                disabled={!this.state.cnpj}
+                            >
+                                <span className='ok'>
+                                    OK
+                                </span>
+                                <span className='icon'>
+                                    <Icon tag="icon-arrow-right" size='1x'/>
+                                </span>
+                            </Button>
+                        </div>                       
                     </div>
                 </div>
-            </div>
+            
         )
     }
 }

@@ -4,7 +4,7 @@ const BASE_URL = process.env.REACT_APP_BASE_URL;
 axios.interceptors.request.use(
   function (setup) {
       const Authentication = '23456789'
-      setup.headers['Authorization'] = `Carrier ${Authentication}`;
+      setup.headers['Authorization'] = `Bearer ${Authentication}`;
       setup.headers['Access-Token'] = Authentication;
       setup.headers['Content-Type'] = 'application/json';
       setup.headers['Access-Control-Allow-Origin'] = '*';

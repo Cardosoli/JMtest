@@ -153,16 +153,20 @@ body,
     flex: 0 0 100%;
     max-width: 100%;
 
-        .cod_cnpj {
+        input {
           float: left;
-        } // cod_cnpj
+          padding: 0;
+          border: none;
+          outline: none;
+          display: flex;
+        }
 
-        .icon_cnpj {
-          color: #a9b1b7;
+        .icon_cnpj_invalid {
+          color: #ce2828;
           float: right;
         } // icon_cnpj
 
-        .icon_cnpj_green {
+        .icon_cnpj_valid {
           color: #8ad41c;
           float: right;
         } // icon_cnpj_green
@@ -178,16 +182,25 @@ body,
       height: calc(100vh - 315px);
     } // button_container
 
-    .button_footer{
+    .button_footer {
+      background: #a9b1b7;
+    }
+
+    .button_footer_blue {
       background: #48c5c5;
+    }
+    
+
+    button {
+      cursor: not-allowed;
       color: white;
       width: 100%;
       padding-top: 20px;
-      padding-bottom: 35px;
+      padding-bottom: 20px;
       border: none;
       outline: none;
       cursor: pointer;
-
+     
       .ok {
         padding-left: 20px;
         float: left;
@@ -198,8 +211,8 @@ body,
         float: right;
       } //icon
 
-    } // button_footer
-    
+    } // button
+
   } // button_confirm
 
 } // body_busca_cnpj
